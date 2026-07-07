@@ -1,4 +1,4 @@
-from data_generator import FuncMageDataGenerator
+# from data_generator import FuncMageDataGenerator
 
 
 def artifact_sorter(artifacts: list[dict]) -> list[dict]:
@@ -18,19 +18,20 @@ def mage_stats(mages: list[dict]) -> dict:
 
 
 def main():
-    # artifacts = [{'name': "Gandalf",
-    #               'power': 15,
-    #               'type': "Mage"},
-    #              {'name': 'Frodo',
-    #               'power': 200,
-    #               'type': 'Frodo'},
-    #              {'name': 'Garfield',
-    #               'power': 99999,
-    #               'type': 'Yes'}
-    #              ]
-    # spells = ["Spellerino", 'Spell number 2', "Hello im a spell"]
-    artifacts = FuncMageDataGenerator.generate_artifacts(5)
-    spells = FuncMageDataGenerator.generate_spells(10)
+    print("\x1b[2J\x1b[H")
+    artifacts = [{'name': "Gandalf",
+                  'power': 15,
+                  'type': "Mage"},
+                 {'name': 'Frodo',
+                  'power': 200,
+                  'type': 'Frodo'},
+                 {'name': 'Garfield',
+                  'power': 99999,
+                  'type': 'Yes'}
+                 ]
+    spells = ["Spellerino", 'Spell number 2', "Hello im a spell"]
+    # artifacts = FuncMageDataGenerator.generate_artifacts(5)
+    # spells = FuncMageDataGenerator.generate_spells(10)
     sorted = artifact_sorter(artifacts)
     print("\x1b[42m\x1b[30m")
     print("Testing artifact sorter...\x1b[0m")
