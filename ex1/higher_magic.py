@@ -19,14 +19,15 @@ def spell_sequence(spells: list[Callable]) -> Callable:
 
 
 def main():
+    results = [spell_combiner(
+        lambda t, p: f"Fireball hits {t}",
+        lambda t, p: f"Heals {t}")("Dragon", 10),]
     print("\x1b[2J\x1b[H")
     print("\x1b[42m")
     print("Testing spell combiner...\x1b[0m")
     print("Combined spell result:")
-    for x in (spell_combiner(
-        lambda t, p: f"Fireball hits {t}",
-        lambda t, p: f"Heals {t}")
-        ("Dragon", 10)): print(x, end=', ')
+    for x in results[0]:
+        print(x, end=', ') if x != results[0][-1] else print(x)
     print("\x1b[42m")
     print("Testing power amplifier...\x1b[0m")
     print("Amplified spell result bla bla...")
