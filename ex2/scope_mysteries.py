@@ -28,7 +28,19 @@ def enchantment_factory(enchantment_type: str) -> Callable:
 
 
 def memory_vault() -> dict[str, Callable]:
-    pass
+    data = {}
+
+    def store(key: str, value: str) -> None:
+        # nonlocal data
+        data.update({key: value})
+
+    def recall(key: str) -> str:
+        if key in data:
+            return data[key]
+        else:
+            return "Memory not found"
+
+    return {'store': store, 'recall': recall}
 
 
 def main():
@@ -48,6 +60,11 @@ def main():
     print(enflame("Sword"))
     print(freeze("Shield"), end='\n\n')
     print("Testing memory vault...")
+    vault = memory_vault()
+    print("Store 'secret' = 42")
+    vault['store']("secret", "42")
+    print(f"Recall 'secret': {vault['recall']('secret')}")
+    print(f"Recall 'unknown': {vault['recall']('unknown')}")
 
 
 if __name__ == "__main__":
