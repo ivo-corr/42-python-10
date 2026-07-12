@@ -1,5 +1,5 @@
 from typing import Any, Callable
-from functools import reduce, partial, lru_cache
+from functools import reduce, partial, lru_cache, singledispatch
 import operator
 
 
@@ -22,20 +22,39 @@ def partial_enchanter(base_enchantment: Callable) -> dict[str, Callable]:
     return ps
 
 
+@lru_cache
 def memoized_fibonacci(n: int) -> int:
-    pass
+    if n in [0, 1]:
+        return n
+    return (memoized_fibonacci(n-1) + memoized_fibonacci(n-2))
 
 
-def spell_dispatcher() -> Callable[[Any], str]:
-    pass
+@singledispatch
+def spell_dispatcher(value: Any) -> Callable[[Any], str]:
+    print("Unknown spell type")
+
+
+@spell_dispatcher.register(int)
+def _(spell: int):
+    print(f"Damage spell: {spell} damage")
+
+
+@spell_dispatcher.register(str)
+def _(spell: str):
+    print(f"Enchantment: {spell}")
+
+
+@spell_dispatcher.register(list)
+def _(spell: list):
+    print(f"Multi-cast: {len(spell)} spells")
 
 
 def main() -> None:
     data = [[40, 30, 20, 10],
             [f := lambda power, element, target: (
                 f'Power={power}, Element={element}, Target={target}'),
-             partial_enchanter(f)]
-]
+             partial_enchanter(f)],
+            [0, 1, 10, 15]]
     print("\nTesting spell reducer...")
     print(f"Sum: {spell_reducer(data[0], 'add')}")
     print(f"Product: {spell_reducer(data[0], 'multiply')}")
@@ -50,6 +69,14 @@ def main() -> None:
            f"{data[1][1][k](target=target)}") for k in data[1][1].keys()]
 
     print("\nTesting memoized fibonacci...")
+    [print(f"Fib ({n}): {memoized_fibonacci(n)}") for n in data[2]]
+    print()
+    # print(memoized_fibonacci.cache_info())
+    print("Testing spell dispatcher...")
+    spell_dispatcher(42)
+    spell_dispatcher("fireball")
+    spell_dispatcher(["fireball", "waterball", "Yes"])
+    spell_dispatcher(42.42)
 
 
 if __name__ == "__main__":
