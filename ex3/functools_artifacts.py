@@ -12,10 +12,13 @@ def spell_reducer(spells: list[int], operation: str) -> int:
         return reduce(lambda x, y: max(x, y), spells)
     if operation.capitalize() == "Min":
         return reduce(lambda x, y: min(x, y), spells)
+    return 0
 
 
-def partial_enchanter(base_enchantment: Callable) -> dict[str, Callable]:
-    ps: dict[str, Callable] = {}
+def partial_enchanter(
+        base_enchantment:
+        Callable[[int, str, str], str]) -> dict[str, Callable[[str], str]]:
+    ps: dict[str, Callable[[str], str]] = {}
     ps.update({"1": partial(base_enchantment, power=50, element="Fire")})
     ps.update({"2": partial(base_enchantment, power=50, element="Water")})
     ps.update({"3": partial(base_enchantment, power=50, element="Air")})
@@ -31,29 +34,34 @@ def memoized_fibonacci(n: int) -> int:
 
 @singledispatch
 def spell_dispatcher(value: Any) -> Callable[[Any], str]:
-    print("Unknown spell type")
+    return "Unknown spell type"
 
 
 @spell_dispatcher.register(int)
 def _(spell: int):
-    print(f"Damage spell: {spell} damage")
+    return (f"Damage spell: {spell} damage")
 
 
 @spell_dispatcher.register(str)
 def _(spell: str):
-    print(f"Enchantment: {spell}")
+    return (f"Enchantment: {spell}")
 
 
 @spell_dispatcher.register(list)
 def _(spell: list):
-    print(f"Multi-cast: {len(spell)} spells")
+    return (f"Multi-cast: {len(spell)} spells")
+
+
+def create_spell_system():
+    return spell_dispatcher
 
 
 def main() -> None:
+    def base(power: int, element: str, target: str):
+        return f"Power={power}, Element={element}, Target={target}"
     data = [[40, 30, 20, 10],
-            [f := lambda power, element, target: (
-                f'Power={power}, Element={element}, Target={target}'),
-             partial_enchanter(f)],
+            [base,
+             partial_enchanter(base)],
             [0, 1, 10, 15]]
     print("\nTesting spell reducer...")
     print(f"Sum: {spell_reducer(data[0], 'add')}")
@@ -73,10 +81,11 @@ def main() -> None:
     print()
     # print(memoized_fibonacci.cache_info())
     print("Testing spell dispatcher...")
-    spell_dispatcher(42)
-    spell_dispatcher("fireball")
-    spell_dispatcher(["fireball", "waterball", "Yes"])
-    spell_dispatcher(42.42)
+    dispatcher_system = create_spell_system()
+    print(dispatcher_system(42))
+    print(dispatcher_system("fireball"))
+    print(dispatcher_system(["fireball", "waterball", "Yes"]))
+    print(dispatcher_system(42.42))
 
 
 if __name__ == "__main__":
