@@ -43,7 +43,8 @@ def main():
     print("\x1b[42m")
     print("Testing power amplifier...\t[multiplier: 3x]\x1b[0m")
     print("Amplified spell result:")
-    print(f"Original: {results[1][0]('Dragon', 10)}, Amplified: {results[1][1]('Dragon', 10)}")
+    print(f"Original: {results[1][0]('Dragon', 10)}, Amplified: "
+          f"{results[1][1]('Dragon', 10)}")
     print("\x1b[42m")
     print("Testing conditional caster...\t"
           "[Condition p > 10 and t != 'Dragon']\x1b[0m")

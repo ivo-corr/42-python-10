@@ -35,9 +35,11 @@ def main():
     sorted = artifact_sorter(artifacts)
     print("\x1b[42m\x1b[30m")
     print("Testing artifact sorter...\x1b[0m")
-    # [print(f"{a['name']} ({a['power']} power) comes before ") for a in sorted[:1]]
+    # [print(f"{a['name']} ({a['power']} power) comes before ")
+    # for a in sorted[:1]]
     # [print(f"{a['name']} ({a['power']} power).") for a in sorted[1:-1]]
-    # [print(f"{a['name']} ({a['power']} power) who comes before ") for a in sorted[-1]]
+    # [print(f"{a['name']} ({a['power']} power) who comes before ") for
+    # a in sorted[-1]]
 
     for a in sorted:
         if (sorted.index(a) == 0):
@@ -48,7 +50,8 @@ def main():
             print(f"{a['name']} ({a['power']} power) who comes before ")
     pfilter = 100
     print("\x1b[42m\x1b[30m")
-    print(f"Testing power filter... [artifacts with power >= {pfilter}]\x1b[0m")
+    print("Testing power filter... "
+          f"[artifacts with power >= {pfilter}]\x1b[0m")
     [print(f"{a['name']} ({a['power']} power)")
      for a in power_filter(artifacts, pfilter)]
     print("\x1b[42m\x1b[30m")

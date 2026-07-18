@@ -32,6 +32,7 @@ def retry_spell(max_attempts: int) -> Callable:
         return wrapper
     return decorator
 
+
 def spell_timer(func: Callable) -> Callable:
     @wraps(func)
     def wrapper(*args, **kwargs) -> str:

@@ -1,6 +1,5 @@
 from typing import Any, Callable
 from functools import reduce, partial, lru_cache, singledispatch
-import operator
 
 
 def spell_reducer(spells: list[int], operation: str) -> int:
