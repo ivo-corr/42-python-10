@@ -1,28 +1,38 @@
 from collections.abc import Callable
+from typing import Any
 
 
-def spell_combiner(spell1: Callable, spell2: Callable) -> Callable:
+def spell_combiner(
+        spell1: Callable[[str, int], str],
+        spell2: Callable[[str, int], str]) -> Callable[
+            [str, int], tuple[Any, Any]]:
     return lambda t, p: (spell1(t, p), spell2(t, p))
 
 
-def power_amplifier(base_spell: Callable, multiplier: int) -> Callable:
+def power_amplifier(
+        base_spell: Callable[[str, int], str],
+        multiplier: int) -> Callable[[str, int], str]:
     return lambda t, p: base_spell(t, multiplier * p)
 
 
-def conditional_caster(condition: Callable, spell: Callable) -> Callable:
+def conditional_caster(condition: Callable[[str, int], bool],
+                       spell: Callable[[str, int], str]
+                       ) -> Callable[[str, int], str]:
     return lambda t, p: spell(t, p) if condition(t, p) is True else "Spell" \
                                                                     " fizzled"
 
 
-def spell_sequence(spells: list[Callable]) -> Callable:
+def spell_sequence(spells: list[Callable[[str, int], Any]]
+                   ) -> Callable[[str, int], list[str]]:
     return lambda t, p: [spell(t, p) for spell in spells]
 
 
-def main():
-    results = [spell_combiner(
-        lambda t, p: f"Fireball hits {t}",
-        lambda t, p: f"Heals {t}")("Dragon", 10),
-        [lambda t, p: p, power_amplifier(lambda t, p: p, 3)],
+def main() -> None:
+    results = (spell_combiner(
+        lambda t, p: f"Fireball hits {t} with power {p}",
+        lambda t, p: f"Heals {t} wiht power {p}")("Dragon", 10),
+        [lambda t, p: p, power_amplifier(
+            lambda t, p: f"Spell with power {p}", 3)],
         [conditional_caster(
             lambda t, p: p > 10 and t != 'Dragon',
             lambda t, p: f"Fireball hits {t} with power {p}")("Warrior", 15),
@@ -33,7 +43,7 @@ def main():
          s2 := lambda t, p: f"Iceball hits {t} with power {p}",
          lambda t, p: f"Thunder hits {t} with power {p}",
          spell_combiner(s1, s2)]
-        ]
+    )
     # print("\x1b[2J\x1b[H")
     print("\x1b[42m")
     print("Testing spell combiner...\x1b[0m")
