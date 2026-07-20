@@ -1,11 +1,12 @@
 # from data_generator import FuncMageDataGenerator
+from typing import Any
 
-
-def artifact_sorter(artifacts: list[dict]) -> list[dict]:
+def artifact_sorter(artifacts: list[dict[str, Any]]) -> list[dict[str, int]]:
     return sorted(artifacts, key=lambda x: x['power'], reverse=True)
 
 
-def power_filter(mages: list[dict], min_power: int) -> list[dict]:
+def power_filter(
+        mages: list[dict[str, Any]], min_power: int) -> list[dict[str, str]]:
     return list(filter(lambda x: x['power'] >= min_power, mages))
 
 
@@ -13,11 +14,16 @@ def spell_transformer(spells: list[str]) -> list[str]:
     return list(map(lambda x: '* '+x+' *', spells))
 
 
-def mage_stats(mages: list[dict]) -> dict:
-    pass
+def mage_stats(mages: list[dict[str, Any]]) -> dict[str, int | float]:
+    result: dict[str, int | float] = {}
+    result["max_power"] = max(map(lambda x: x["power"], mages))
+    result["min_power"] = min(map(lambda x: x["power"], mages))
+    result["avg_power"] = round(
+        sum(map(lambda x: x['power'], mages))/len(mages), 2)
+    return result
 
 
-def main():
+def main() -> None:
     print("\x1b[2J\x1b[H")
     artifacts = [{'name': "Gandalf",
                   'power': 15,
@@ -57,7 +63,9 @@ def main():
     print("\x1b[42m\x1b[30m")
     print("Testing spell transformer...\x1b[0m")
     [print(x, end=' ') for x in spell_transformer(spells)]
-
+    print("\x1b[42m\x1b[30m")
+    print("\nTesting mage stats...\x1b[0m")
+    print(mage_stats(artifacts))
 
 if __name__ == "__main__":
     main()
