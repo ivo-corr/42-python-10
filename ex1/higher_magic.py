@@ -45,7 +45,7 @@ def main() -> None:
          spell_combiner(s1, s2)]
     )
     # print("\x1b[2J\x1b[H")
-    print("\x1b[42m")
+    print("\n\x1b[42m")
     print("Testing spell combiner...\x1b[0m")
     print("Combined spell result:")
     for x in results[0]:
