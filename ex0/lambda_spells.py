@@ -1,6 +1,7 @@
 # from data_generator import FuncMageDataGenerator
 from typing import Any
 
+
 def artifact_sorter(artifacts: list[dict[str, Any]]) -> list[dict[str, int]]:
     return sorted(artifacts, key=lambda x: x['power'], reverse=True)
 
@@ -63,9 +64,10 @@ def main() -> None:
     print("\x1b[42m\x1b[30m")
     print("Testing spell transformer...\x1b[0m")
     [print(x, end=' ') for x in spell_transformer(spells)]
-    print("\x1b[42m\x1b[30m")
-    print("\nTesting mage stats...\x1b[0m")
+    print("\n\x1b[42m\x1b[30m")
+    print("Testing mage stats...\x1b[0m")
     print(mage_stats(artifacts))
+
 
 if __name__ == "__main__":
     main()
