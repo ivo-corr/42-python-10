@@ -1,23 +1,26 @@
 from functools import wraps
 from typing import Callable
 import time
+from typing import Any, cast, ParamSpec
 
 
-def power_validator(min_power: int) -> Callable:
-    def decorator(func) -> Callable:
+def power_validator(min_power: int
+                    ) -> Callable[[Any], Any]:
+    def decorator(func: Callable[[str, int], str]
+                  ) -> Callable[[str, int], str]:
         @wraps(func)
-        def wrapper(*args, **kwargs):
-            if args[2] < min_power:
+        def wrapper(*args: Any, **kwargs: Any) -> str:
+            if cast(int, args[2]) < min_power:
                 return "Insufficient power for this spell"
             return (func(*args, **kwargs))
         return wrapper
     return decorator
 
 
-def retry_spell(max_attempts: int) -> Callable:
-    def decorator(func: Callable) -> Callable:
+def retry_spell(max_attempts: int) -> Callable[[Any], Any]:
+    def decorator(func: Callable[[Any], Any]) -> Callable[[Any, Any], str]:
         @wraps(func)
-        def wrapper(*args, **kwargs):
+        def wrapper(*args: Any, **kwargs: Any) -> str:
             for i in range(max_attempts):
                 try:
                     result: str = func(*args, **kwargs)
@@ -29,13 +32,14 @@ def retry_spell(max_attempts: int) -> Callable:
                     if i == max_attempts - 1:
                         print("Spell casting failed "
                               f"after {max_attempts} attempts")
+            return ""
         return wrapper
     return decorator
 
 
-def spell_timer(func: Callable) -> Callable:
+def spell_timer(func: Callable[[Any, Any], Any]) -> Callable[[str, int], str]:
     @wraps(func)
-    def wrapper(*args, **kwargs) -> str:
+    def wrapper(*args: Any, **kwargs: Any) -> str:
         print(f"Casting {wrapper.__name__}...")
         start_time: float = time.perf_counter()
         result: str = func(*args, **kwargs)
@@ -58,9 +62,9 @@ class MageGuild:
         return f"Successfully cast {spell_name} with {power} power"
 
 
-def main():
+def main() -> None:
     @spell_timer
-    def fireball() -> str:
+    def fireball(name: str, power: int) -> str:
         time.sleep(0.101)
         return ("Fireball cast!")
 
@@ -69,7 +73,7 @@ def main():
         raise Exception("no no")
         return ("Iceball cast!")
     print("Testing spell timer...")
-    print(f"Result: {fireball()}")
+    print(f"Result: {fireball('Someone', 15)}")
     print("\nTesting retrying spell...")
     iceball()
     print("\nTesting MageGuild...")

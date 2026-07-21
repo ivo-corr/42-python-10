@@ -1,34 +1,35 @@
 from collections.abc import Callable
+from typing import Any
 
 
-def mage_counter() -> Callable:
-    count = 0
+def mage_counter() -> Callable[[], int]:
+    count: int = 0
 
-    def add():
+    def add() -> int:
         nonlocal count
         count += 1
         return count
     return add
 
 
-def spell_accumulator(initial_power: int) -> Callable:
-    power = initial_power
+def spell_accumulator(initial_power: int) -> Callable[[int], int]:
+    power: int = initial_power
 
-    def acc(pow: int):
+    def acc(pow: int) -> int:
         nonlocal power
         power += pow
         return power
     return acc
 
 
-def enchantment_factory(enchantment_type: str) -> Callable:
-    def apply_enchantment(item: str):
+def enchantment_factory(enchantment_type: str) -> Callable[[str], str]:
+    def apply_enchantment(item: str) -> str:
         return f"{enchantment_type} {item}"
     return apply_enchantment
 
 
-def memory_vault() -> dict[str, Callable]:
-    data = {}
+def memory_vault() -> dict[str, Callable[..., Any]]:
+    data: dict[str, str] = {}
 
     def store(key: str, value: str) -> None:
         # nonlocal data
@@ -43,7 +44,7 @@ def memory_vault() -> dict[str, Callable]:
     return {'store': store, 'recall': recall}
 
 
-def main():
+def main() -> None:
     print("Testing mage counter...")
     counter_a = mage_counter()
     counter_b = mage_counter()
