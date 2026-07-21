@@ -1,7 +1,7 @@
 from functools import wraps
 from typing import Callable
 import time
-from typing import Any, cast, ParamSpec
+from typing import Any, cast
 
 
 def power_validator(min_power: int
